@@ -13,9 +13,11 @@ const Register = () => {
     handleSubmit,
     watch,
     formState: { errors },
+    trigger,
   } = useForm();
   const onSubmit = (data) => console.log(data);
 
+  //password validation
   const validatePassword = (value) => {
     const password = value.trim();
     const confirmPassword = watch("confirmPassword").trim();
@@ -24,6 +26,11 @@ const Register = () => {
       return "Passwords do not match";
     }
     return true;
+  };
+
+  //
+  const handlePasswordChange = () => {
+    trigger("password");
   };
   return (
     <div className="grid md:grid-cols-2">
@@ -56,6 +63,9 @@ const Register = () => {
               placeholder="Enter your Full Name"
               {...register("name", { required: true })}
             />
+            {errors.name && (
+              <span className="text-red-600">Name is required</span>
+            )}
           </div>
           <div>
             <input
@@ -64,19 +74,38 @@ const Register = () => {
               placeholder="Enter your email"
               {...register("email", { required: true })}
             />
+            {errors.email && (
+              <span className="text-red-600">Email is required</span>
+            )}
           </div>
           <div className="relative">
             <input
               className="px-2 py-3 w-[100%] rounded-md outline-1 outline-[#007CFF]"
               type={visible ? "text" : "password"}
               placeholder="Password"
+              required
               {...register("password", {
                 required: true,
                 validate: validatePassword,
+                minLength: 6,
+                pattern: /(?=.*[A-Z])(?=.*[!@#$&*])(?=.*[a-z])/,
               })}
+              onChange={handlePasswordChange}
             />
+
             {errors.password?.type === "validate" && (
-              <p className="text-red-500">Passwords do not match.</p>
+              <p className="text-red-500">
+                Passwords do not match with confirm password.
+              </p>
+            )}
+            {errors.password?.type === "minLength" && (
+              <p className="text-red-600">Password must be 6 characters</p>
+            )}
+            {errors.password?.type === "pattern" && (
+              <p className="text-red-600">
+                Password must have one Uppercase one lower case and one special
+                character.
+              </p>
             )}
             {visible ? (
               <AiOutlineEyeInvisible
@@ -101,6 +130,9 @@ const Register = () => {
                 validate: validatePassword,
               })}
             />
+            {errors.confirmPassword && (
+              <span className="text-red-600">Confirm Password is required</span>
+            )}
             {visible ? (
               <AiOutlineEyeInvisible
                 onClick={() => setVisible(!visible)}

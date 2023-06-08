@@ -27,7 +27,7 @@ const Login = () => {
           loop={true}
         ></Lottie>
       </div>
-      <div className="h-[90vh] flex flex-col justify-center bg-[#aacef5b3] bg-opacity-50 ">
+      <div className="flex flex-col justify-center bg-[#aacef5b3] bg-opacity-50 ">
         <div className="text-center mb-10">
           <h1 className="text-[35px] font-bold">Welcome Back</h1>
           <p className="text-[#727695] mt-4">

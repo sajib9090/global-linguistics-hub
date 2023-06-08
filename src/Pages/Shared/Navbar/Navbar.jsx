@@ -1,5 +1,5 @@
 import React from "react";
-import { NavLink } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 import { RxAvatar } from "react-icons/rx";
 
 const Navbar = () => {
@@ -75,9 +75,11 @@ const Navbar = () => {
               {navOptions}
             </ul>
           </div>
-          <a className="btn ml-auto md:ml-0 btn-ghost normal-case text-xl">
-            Global Linguistics Hub
-          </a>
+          <Link to="/">
+            <a className="btn ml-auto md:ml-0 btn-ghost normal-case text-xl">
+              Global Linguistics Hub
+            </a>
+          </Link>
         </div>
         <div className="navbar-end hidden lg:flex">
           <ul className="menu menu-horizontal px-1 space-x-6 text-[16px]">
