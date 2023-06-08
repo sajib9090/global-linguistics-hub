@@ -1,9 +1,12 @@
 import React from "react";
+import Hero from "./Hero";
+import PopularClasses from "./PopularClasses";
 
 const Home = () => {
   return (
     <div>
-      <h2>home</h2>
+      <Hero />
+      <PopularClasses />
     </div>
   );
 };

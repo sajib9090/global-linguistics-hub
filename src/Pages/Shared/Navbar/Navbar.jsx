@@ -2,12 +2,16 @@ import React from "react";
 import { Link, NavLink } from "react-router-dom";
 import { RxAvatar } from "react-icons/rx";
 import useAuth from "../../../Hooks/UseAuth";
+import { Toaster, toast } from "react-hot-toast";
 
 const Navbar = () => {
   const { logOut, user } = useAuth();
   const handleLogOut = () => {
     logOut();
+    toast.success("Logout Success.");
   };
+
+  // console.log(user);
   const navOptions = (
     <>
       <li>
@@ -57,8 +61,8 @@ const Navbar = () => {
     </>
   );
   return (
-    <div>
-      <div className="navbar bg-white text-black">
+    <div className="mb-16">
+      <div className="navbar bg-white text-black z-[999] fixed top-0 left-0">
         <div className="navbar-start">
           <div className="dropdown">
             <label tabIndex={0} className="btn btn-ghost lg:hidden">
@@ -178,6 +182,7 @@ const Navbar = () => {
           )}
         </div>
       </div>
+      <Toaster />
     </div>
   );
 };

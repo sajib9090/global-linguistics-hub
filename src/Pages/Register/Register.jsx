@@ -1,18 +1,34 @@
 import React, { useState } from "react";
 import Lottie from "lottie-react";
 import welcome from "../../../public/welcome.json";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import googleLogo from "../../assets/google.png";
-import { AiFillEye, AiOutlineEyeInvisible } from "react-icons/ai";
+import {
+  AiFillEye,
+  AiOutlineEyeInvisible,
+  AiOutlineLoading3Quarters,
+} from "react-icons/ai";
 import { useForm } from "react-hook-form";
 import useAuth from "../../Hooks/UseAuth";
+import { Toaster, toast } from "react-hot-toast";
+// const navigate = useNavigate();
 
 const Register = () => {
   // import useful things from custom hook
 
-  const { googleSignIn } = useAuth();
+  const {
+    loading,
+    setLoading,
+    googleSignIn,
+    logOut,
+    createUser,
+    updateUserProfile,
+  } = useAuth();
+
   //state
   const [visible, setVisible] = useState(false);
+
+  const navigate = useNavigate();
 
   // use form hook
   const {
@@ -21,8 +37,32 @@ const Register = () => {
     watch,
     formState: { errors },
     trigger,
+    reset,
   } = useForm();
-  const onSubmit = (data) => console.log(data);
+  const onSubmit = (data) => {
+    console.log(data);
+    createUser(data.email, data.password)
+      .then((result) => {
+        // console.log(result.user);
+        updateUserProfile(data.name, data.photo)
+          .then(() => {
+            toast.success("Updated success");
+            reset();
+            logOut();
+            navigate("/login");
+          })
+          .catch((err) => {
+            setLoading(false);
+            // console.log(err.message);
+            toast.error(err.message);
+          });
+      })
+
+      .catch((err) => {
+        setLoading(false);
+        toast.error(err.message);
+      });
+  };
 
   //password validation
   const validatePassword = (value) => {
@@ -44,9 +84,11 @@ const Register = () => {
     googleSignIn()
       .then((result) => {
         const user = result.user;
-        // console.log(user);
+        console.log(user);
+        // navigate("/");
       })
       .catch((error) => {
+        setLoading(false);
         const errorMessage = error.message;
         console.log(errorMessage);
       });
@@ -175,15 +217,24 @@ const Register = () => {
             />
           </div>
           <div>
-            <input
+            <button
               className="px-2 py-3 w-[100%] rounded-md bg-[#007CFF] text-white cursor-pointer"
               type="submit"
               value="Register"
-            />
+            >
+              {loading ? (
+                <AiOutlineLoading3Quarters
+                  className="m-auto animate-spin"
+                  size={24}
+                />
+              ) : (
+                "Register"
+              )}
+            </button>
           </div>
           <div className="divider py-4">Or</div>
         </form>
-        <div>
+        <div className="mb-6">
           <button
             onClick={handleGoogleSignIn}
             className="flex items-center border border-[#007CFF] hover:border-transparent rounded-md hover:bg-[#516c8984] btn-outline py-3 w-[50%] mx-auto justify-center duration-500"
@@ -194,6 +245,7 @@ const Register = () => {
           </button>
         </div>
       </div>
+      <Toaster />
     </div>
   );
 };

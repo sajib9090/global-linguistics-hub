@@ -11,16 +11,28 @@ import { AiOutlineLoading3Quarters } from "react-icons/ai";
 const Login = () => {
   const [visible, setVisible] = useState(false);
 
-  const { loading, setLoading, googleSignIn } = useAuth();
+  const { loading, setLoading, googleSignIn, signIn } = useAuth();
 
   const navigate = useNavigate();
 
   const {
     register,
     handleSubmit,
+    reset,
     formState: { errors },
   } = useForm();
-  const onSubmit = (data) => console.log(data);
+  const onSubmit = (data) => {
+    signIn(data.email, data.password)
+      .then((result) => {
+        console.log(result.user);
+        reset();
+      })
+      .catch((err) => {
+        setLoading(false);
+        console.log(err.message);
+        toast.error(err.message);
+      });
+  };
 
   const handleGoogleLogin = () => {
     googleSignIn()
