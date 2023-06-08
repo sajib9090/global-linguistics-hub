@@ -1,11 +1,22 @@
-import React from "react";
+import React, { useState } from "react";
 import Lottie from "lottie-react";
 import securityShield from "../../../public/security.json";
 import { Link } from "react-router-dom";
 import googleLogo from "../../assets/google.png";
 import { AiFillEye, AiOutlineEyeInvisible } from "react-icons/ai";
+import { useForm } from "react-hook-form";
 
 const Login = () => {
+  const [visible, setVisible] = useState(false);
+
+  const {
+    register,
+    handleSubmit,
+    watch,
+    formState: { errors },
+  } = useForm();
+  const onSubmit = (data) => console.log(data);
+
   return (
     <div className="grid md:grid-cols-2">
       <div className="h-[90vh]">
@@ -28,22 +39,43 @@ const Login = () => {
             </Link>
           </p>
         </div>
-        <form className="px-6 py-10 space-y-4">
+        <form
+          onSubmit={handleSubmit(onSubmit)}
+          className="px-6 py-10 space-y-4"
+        >
           <div>
             <input
               className="px-2 py-3 w-[100%] rounded-md outline-1 outline-[#007CFF]"
               type="email"
+              {...register("email", { required: true })}
               placeholder="Enter your email"
             />
+            {errors.email && (
+              <span className="text-red-600">Email is required</span>
+            )}
           </div>
           <div className="relative">
             <input
               className="px-2 py-3 w-[100%] rounded-md outline-1 outline-[#007CFF]"
-              type="password"
+              type={visible ? "text" : "password"}
               placeholder="Password"
+              {...register("password", { required: true })}
             />
-            <AiFillEye className="h-6 w-6 text-[#007CFF] absolute right-3 cursor-pointer top-3" />
-            {/* <AiOutlineEyeInvisible className="h-6 w-6 text-[#007CFF]" /> */}
+            {errors.password && (
+              <span className="text-red-600">Password is required</span>
+            )}
+            {visible ? (
+              <AiOutlineEyeInvisible
+                onClick={() => setVisible(!visible)}
+                className="h-6 w-6 text-[#007CFF] absolute right-3 cursor-pointer top-3"
+              />
+            ) : (
+              <AiFillEye
+                onClick={() => setVisible(!visible)}
+                className="h-6 w-6 text-[#007CFF] absolute right-3 cursor-pointer top-3"
+              />
+            )}
+            {/*  */}
           </div>
           <div>
             <input

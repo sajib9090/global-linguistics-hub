@@ -1,10 +1,30 @@
-import React from "react";
+import React, { useState } from "react";
 import Lottie from "lottie-react";
 import welcome from "../../../public/welcome.json";
 import { Link } from "react-router-dom";
 import googleLogo from "../../assets/google.png";
+import { AiFillEye, AiOutlineEyeInvisible } from "react-icons/ai";
+import { useForm } from "react-hook-form";
 
 const Register = () => {
+  const [visible, setVisible] = useState(false);
+  const {
+    register,
+    handleSubmit,
+    watch,
+    formState: { errors },
+  } = useForm();
+  const onSubmit = (data) => console.log(data);
+
+  const validatePassword = (value) => {
+    const password = value.trim();
+    const confirmPassword = watch("confirmPassword").trim();
+
+    if (password !== confirmPassword) {
+      return "Passwords do not match";
+    }
+    return true;
+  };
   return (
     <div className="grid md:grid-cols-2">
       <div className="">
@@ -25,12 +45,16 @@ const Register = () => {
             </Link>
           </p>
         </div>
-        <form className="px-6 py-10 space-y-4">
+        <form
+          onSubmit={handleSubmit(onSubmit)}
+          className="px-6 py-10 space-y-4"
+        >
           <div>
             <input
               className="px-2 py-3 w-[100%] rounded-md outline-1 outline-[#007CFF]"
               type="text"
               placeholder="Enter your Full Name"
+              {...register("name", { required: true })}
             />
           </div>
           <div>
@@ -38,27 +62,64 @@ const Register = () => {
               className="px-2 py-3 w-[100%] rounded-md outline-1 outline-[#007CFF]"
               type="email"
               placeholder="Enter your email"
+              {...register("email", { required: true })}
             />
           </div>
-          <div>
+          <div className="relative">
             <input
               className="px-2 py-3 w-[100%] rounded-md outline-1 outline-[#007CFF]"
-              type="password"
-              placeholder="Enter your Password"
+              type={visible ? "text" : "password"}
+              placeholder="Password"
+              {...register("password", {
+                required: true,
+                validate: validatePassword,
+              })}
             />
+            {errors.password?.type === "validate" && (
+              <p className="text-red-500">Passwords do not match.</p>
+            )}
+            {visible ? (
+              <AiOutlineEyeInvisible
+                onClick={() => setVisible(!visible)}
+                className="h-6 w-6 text-[#007CFF] absolute right-3 cursor-pointer top-3"
+              />
+            ) : (
+              <AiFillEye
+                onClick={() => setVisible(!visible)}
+                className="h-6 w-6 text-[#007CFF] absolute right-3 cursor-pointer top-3"
+              />
+            )}
+            {/*  */}
           </div>
-          <div>
+          <div className="relative">
             <input
               className="px-2 py-3 w-[100%] rounded-md outline-1 outline-[#007CFF]"
-              type="password"
-              placeholder="Enter your confirm password"
+              type={visible ? "text" : "password"}
+              placeholder="Confirm Password"
+              {...register("confirmPassword", {
+                required: true,
+                validate: validatePassword,
+              })}
             />
+            {visible ? (
+              <AiOutlineEyeInvisible
+                onClick={() => setVisible(!visible)}
+                className="h-6 w-6 text-[#007CFF] absolute right-3 cursor-pointer top-3"
+              />
+            ) : (
+              <AiFillEye
+                onClick={() => setVisible(!visible)}
+                className="h-6 w-6 text-[#007CFF] absolute right-3 cursor-pointer top-3"
+              />
+            )}
+            {/*  */}
           </div>
           <div>
             <input
               className="px-2 py-3 w-[100%] rounded-md outline-1 outline-[#007CFF]"
               type="text"
               placeholder="Photo url"
+              {...register("photo", { required: true })}
             />
           </div>
           <div>
