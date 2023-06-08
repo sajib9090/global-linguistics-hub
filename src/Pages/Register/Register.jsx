@@ -5,9 +5,16 @@ import { Link } from "react-router-dom";
 import googleLogo from "../../assets/google.png";
 import { AiFillEye, AiOutlineEyeInvisible } from "react-icons/ai";
 import { useForm } from "react-hook-form";
+import useAuth from "../../Hooks/UseAuth";
 
 const Register = () => {
+  // import useful things from custom hook
+
+  const { googleSignIn } = useAuth();
+  //state
   const [visible, setVisible] = useState(false);
+
+  // use form hook
   const {
     register,
     handleSubmit,
@@ -32,6 +39,19 @@ const Register = () => {
   const handlePasswordChange = () => {
     trigger("password");
   };
+
+  const handleGoogleSignIn = () => {
+    googleSignIn()
+      .then((result) => {
+        const user = result.user;
+        // console.log(user);
+      })
+      .catch((error) => {
+        const errorMessage = error.message;
+        console.log(errorMessage);
+      });
+  };
+
   return (
     <div className="grid md:grid-cols-2">
       <div className="">
@@ -162,14 +182,17 @@ const Register = () => {
             />
           </div>
           <div className="divider py-4">Or</div>
-          <div>
-            <button className="flex items-center border border-[#007CFF] hover:border-transparent rounded-md hover:bg-[#516c8984] btn-outline py-3 w-[50%] mx-auto justify-center duration-500">
-              {" "}
-              <img className="h-7 w-8 mr-2" src={googleLogo} alt="" /> Connect
-              with Google
-            </button>
-          </div>
         </form>
+        <div>
+          <button
+            onClick={handleGoogleSignIn}
+            className="flex items-center border border-[#007CFF] hover:border-transparent rounded-md hover:bg-[#516c8984] btn-outline py-3 w-[50%] mx-auto justify-center duration-500"
+          >
+            {" "}
+            <img className="h-7 w-8 mr-2" src={googleLogo} alt="" /> Connect
+            with Google
+          </button>
+        </div>
       </div>
     </div>
   );

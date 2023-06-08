@@ -1,21 +1,39 @@
 import React, { useState } from "react";
 import Lottie from "lottie-react";
 import securityShield from "../../../public/security.json";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import googleLogo from "../../assets/google.png";
 import { AiFillEye, AiOutlineEyeInvisible } from "react-icons/ai";
 import { useForm } from "react-hook-form";
-
+import useAuth from "../../Hooks/UseAuth";
+import { Toaster, toast } from "react-hot-toast";
+import { AiOutlineLoading3Quarters } from "react-icons/ai";
 const Login = () => {
   const [visible, setVisible] = useState(false);
+
+  const { loading, setLoading, googleSignIn } = useAuth();
+
+  const navigate = useNavigate();
 
   const {
     register,
     handleSubmit,
-    watch,
     formState: { errors },
   } = useForm();
   const onSubmit = (data) => console.log(data);
+
+  const handleGoogleLogin = () => {
+    googleSignIn()
+      .then((result) => {
+        console.log(result);
+        toast.success("Login success");
+        navigate("/");
+      })
+      .catch((error) => {
+        setLoading(false);
+        toast.error(error.message);
+      });
+  };
 
   return (
     <div className="grid md:grid-cols-2">
@@ -78,22 +96,35 @@ const Login = () => {
             {/*  */}
           </div>
           <div>
-            <input
+            <button
               className="px-2 py-3 w-[100%] rounded-md bg-[#007CFF] text-white cursor-pointer"
               type="submit"
               value="Login"
-            />
-          </div>
-          <div className="divider py-4">Or</div>
-          <div>
-            <button className="flex items-center border border-[#007CFF] hover:border-transparent rounded-md hover:bg-[#516c8984] btn-outline py-3 w-[50%] mx-auto justify-center duration-500">
-              {" "}
-              <img className="h-7 w-8 mr-2" src={googleLogo} alt="" /> Connect
-              with Google
+            >
+              {loading ? (
+                <AiOutlineLoading3Quarters
+                  className="m-auto animate-spin"
+                  size={24}
+                />
+              ) : (
+                "Login"
+              )}
             </button>
           </div>
+          <div className="divider py-4">Or</div>
         </form>
+        <div>
+          <button
+            onClick={handleGoogleLogin}
+            className="flex items-center border border-[#007CFF] hover:border-transparent rounded-md hover:bg-[#516c8984] btn-outline py-3 w-[50%] mx-auto justify-center duration-500"
+          >
+            {" "}
+            <img className="h-7 w-8 mr-2" src={googleLogo} alt="" /> Connect
+            with Google
+          </button>
+        </div>
       </div>
+      <Toaster />
     </div>
   );
 };
