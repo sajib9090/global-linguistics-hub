@@ -1,5 +1,6 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
+import { RxAvatar } from "react-icons/rx";
 
 const Navbar = () => {
   const navOptions = (
@@ -8,7 +9,7 @@ const Navbar = () => {
         <NavLink
           to="/"
           className={({ isActive }) =>
-            isActive ? "text-[#F51846]" : "text-black"
+            isActive ? "text-[#007CFF]" : "text-black"
           }
         >
           Home
@@ -18,7 +19,7 @@ const Navbar = () => {
         <NavLink
           to="/instructors"
           className={({ isActive }) =>
-            isActive ? "text-[#F51846]" : "text-black"
+            isActive ? "text-[#007CFF]" : "text-black"
           }
         >
           Instructors
@@ -28,7 +29,7 @@ const Navbar = () => {
         <NavLink
           to="/classes"
           className={({ isActive }) =>
-            isActive ? "text-[#F51846]" : "text-black"
+            isActive ? "text-[#007CFF]" : "text-black"
           }
         >
           Classes
@@ -38,7 +39,7 @@ const Navbar = () => {
         <NavLink
           to="/dashboard"
           className={({ isActive }) =>
-            isActive ? "text-[#F51846]" : "text-black"
+            isActive ? "text-[#007CFF]" : "text-black"
           }
         >
           Dashboard
@@ -119,7 +120,20 @@ const Navbar = () => {
             </div>
           </div>
         </div>
-        <div className="dropdown dropdown-end">
+        <div>
+          <NavLink
+            to="/login"
+            className={({ isActive }) =>
+              isActive
+                ? "text-[#007CFF] mx-2 flex items-center"
+                : "mx-2 text-black flex items-center"
+            }
+          >
+            <RxAvatar className="mr-1" />
+            Login
+          </NavLink>
+        </div>
+        {/* <div className="dropdown dropdown-end">
           <label tabIndex={0} className="btn btn-ghost btn-circle avatar">
             <div className="w-10 rounded-full">
               <img src="/images/stock/photo-1534528741775-53994a69daeb.jpg" />
@@ -142,7 +156,7 @@ const Navbar = () => {
               <a>Logout</a>
             </li>
           </ul>
-        </div>
+        </div> */}
       </div>
     </div>
   );
