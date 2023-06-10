@@ -69,7 +69,6 @@ export const router = createBrowserRouter([
       {
         path: "/dashboard/manageUsers",
         element: <ManageUsers />,
-        loader: () => fetch("http://localhost:5000/students"),
       },
       {
         path: "/dashboard/manageClasses",
