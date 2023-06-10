@@ -1,9 +1,14 @@
 import { Link, NavLink, Outlet, useNavigate } from "react-router-dom";
 import useAuth from "../../Hooks/UseAuth";
+import { useState } from "react";
 
 const Sidebar = () => {
   const { user, logOut } = useAuth();
   const navigate = useNavigate();
+
+  const [isAdmin, setIsAdmin] = useState(true);
+  const [isInstructor, setIsInstructor] = useState(false);
+  const [isStudent, setIsStudent] = useState(false);
 
   const handleLogOut = () => {
     logOut();
@@ -35,72 +40,88 @@ const Sidebar = () => {
               />
               <h3 className="text-black font-bold">{user.displayName}</h3>
             </div>
-            <>
-              <li>
-                <NavLink
-                  to="/dashboard/mySelectedClass"
-                  className={({ isActive }) =>
-                    isActive ? "text-white bg-black" : "text-black"
-                  }
-                >
-                  My Selected Classes
-                </NavLink>
-              </li>
-              <li>
-                <NavLink
-                  to="/dashboard/myEnrollmentClasses"
-                  className={({ isActive }) =>
-                    isActive ? "text-white bg-black" : "text-black"
-                  }
-                >
-                  My Enrolled Classes
-                </NavLink>
-              </li>
-            </>
-            <>
-              <li>
-                <NavLink
-                  to="/dashboard/addAClass"
-                  className={({ isActive }) =>
-                    isActive ? "text-white bg-black" : "text-black"
-                  }
-                >
-                  Add a Class
-                </NavLink>
-              </li>
-              <li>
-                <NavLink
-                  to="/dashboard/myClasses"
-                  className={({ isActive }) =>
-                    isActive ? "text-white bg-black" : "text-black"
-                  }
-                >
-                  My Classes
-                </NavLink>
-              </li>
-            </>
-            <>
-              <li>
-                <NavLink
-                  to="/dashboard/manageClasses"
-                  className={({ isActive }) =>
-                    isActive ? "text-white bg-black" : "text-black"
-                  }
-                >
-                  Manage Classes
-                </NavLink>
-              </li>
-              <li>
-                <NavLink
-                  to="/dashboard/manageUsers"
-                  className={({ isActive }) =>
-                    isActive ? "text-white bg-black" : "text-black"
-                  }
-                >
-                  Manage Users
-                </NavLink>
-              </li>
-            </>
+            {isStudent ? (
+              <>
+                <li>
+                  <NavLink
+                    to="/dashboard/mySelectedClass"
+                    className={({ isActive }) =>
+                      isActive ? "text-white bg-black" : "text-black"
+                    }
+                  >
+                    My Selected Classes
+                  </NavLink>
+                </li>
+                <li>
+                  <NavLink
+                    to="/dashboard/myEnrollmentClasses"
+                    className={({ isActive }) =>
+                      isActive ? "text-white bg-black" : "text-black"
+                    }
+                  >
+                    My Enrolled Classes
+                  </NavLink>
+                </li>
+              </>
+            ) : (
+              ""
+            )}
+            {isInstructor ? (
+              <>
+                <li>
+                  <NavLink
+                    to="/dashboard/addAClass"
+                    className={({ isActive }) =>
+                      isActive ? "text-white bg-black" : "text-black"
+                    }
+                  >
+                    Add a Class
+                  </NavLink>
+                </li>
+                <li>
+                  <NavLink
+                    to="/dashboard/myClasses"
+                    className={({ isActive }) =>
+                      isActive ? "text-white bg-black" : "text-black"
+                    }
+                  >
+                    My Classes
+                  </NavLink>
+                </li>
+              </>
+            ) : (
+              ""
+            )}
+            {isAdmin ? (
+              <>
+                <li>
+                  <NavLink
+                    to="/dashboard/manageClasses"
+                    className={({ isActive }) =>
+                      isActive
+                        ? "text-white bg-black font-medium"
+                        : "text-black font-medium"
+                    }
+                  >
+                    Manage Classes
+                  </NavLink>
+                </li>
+                <li>
+                  <NavLink
+                    to="/dashboard/manageUsers"
+                    className={({ isActive }) =>
+                      isActive
+                        ? "text-white bg-black font-medium"
+                        : "text-black font-medium"
+                    }
+                  >
+                    Manage Users
+                  </NavLink>
+                </li>
+              </>
+            ) : (
+              ""
+            )}
             <div className="divider"></div>
             <li>
               <Link to="/" className="text-black font-bold">

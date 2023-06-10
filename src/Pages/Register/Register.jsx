@@ -53,7 +53,11 @@ const Register = () => {
           .then(() => {
             toast.success("Registration and profile Updated success");
             // save user information inside database
-            const saveUser = { name: data.name, email: data.email };
+            const saveUser = {
+              name: data.name,
+              email: data.email,
+              photo: data.photo,
+            };
             fetch(`http://localhost:5000/students`, {
               method: "POST",
               headers: {
@@ -104,7 +108,11 @@ const Register = () => {
         const user = result.user;
         console.log(user);
         // saved user inside database
-        const saveUser = { name: user.displayName, email: user.email };
+        const saveUser = {
+          name: user.displayName,
+          email: user.email,
+          photo: user.photoURL,
+        };
         fetch(`http://localhost:5000/students`, {
           method: "POST",
           headers: {
