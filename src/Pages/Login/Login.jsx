@@ -1,19 +1,23 @@
 import React, { useState } from "react";
 import Lottie from "lottie-react";
 import securityShield from "../../../public/security.json";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import googleLogo from "../../assets/google.png";
 import { AiFillEye, AiOutlineEyeInvisible } from "react-icons/ai";
 import { useForm } from "react-hook-form";
 import useAuth from "../../Hooks/UseAuth";
 import { Toaster, toast } from "react-hot-toast";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
+
 const Login = () => {
   const [visible, setVisible] = useState(false);
 
   const { loading, setLoading, googleSignIn, signIn } = useAuth();
 
   const navigate = useNavigate();
+  const location = useLocation();
+
+  const from = location.state?.from?.pathname || "/";
 
   const {
     register,
@@ -25,6 +29,7 @@ const Login = () => {
     signIn(data.email, data.password)
       .then((result) => {
         console.log(result.user);
+        navigate(from, { replace: true });
         reset();
       })
       .catch((err) => {
@@ -37,9 +42,23 @@ const Login = () => {
   const handleGoogleLogin = () => {
     googleSignIn()
       .then((result) => {
-        console.log(result);
-        toast.success("Login success");
-        navigate("/");
+        const user = result.user;
+        const saveUser = { name: user.displayName, email: user.email };
+        fetch(`http://localhost:5000/students`, {
+          method: "POST",
+          headers: {
+            "content-type": "application/json",
+          },
+          body: JSON.stringify(saveUser),
+        })
+          .then((res) => res.json())
+          .then((data) => {
+            console.log(data);
+
+            navigate(from, { replace: true });
+            toast.success("Database success");
+          });
+        // navigate(from, { replace: true });
       })
       .catch((error) => {
         setLoading(false);
@@ -50,12 +69,12 @@ const Login = () => {
   return (
     <div className="grid md:grid-cols-2">
       <div className="h-[90vh]">
-        {" "}
+        {/* {" "}
         <Lottie
           className="w-[100%] h-[100%]"
           animationData={securityShield}
           loop={true}
-        ></Lottie>
+        ></Lottie> */}
       </div>
       <div className="flex flex-col justify-center bg-[#aacef5b3] bg-opacity-50 ">
         <div className="text-center mb-10">

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import Lottie from "lottie-react";
 import welcome from "../../../public/welcome.json";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import googleLogo from "../../assets/google.png";
 import {
   AiFillEye,
@@ -11,6 +11,7 @@ import {
 import { useForm } from "react-hook-form";
 import useAuth from "../../Hooks/UseAuth";
 import { Toaster, toast } from "react-hot-toast";
+
 // const navigate = useNavigate();
 
 const Register = () => {
@@ -23,12 +24,16 @@ const Register = () => {
     logOut,
     createUser,
     updateUserProfile,
+    user,
   } = useAuth();
 
   //state
   const [visible, setVisible] = useState(false);
 
   const navigate = useNavigate();
+  const location = useLocation();
+
+  const from = location.state?.from?.pathname || "/";
 
   // use form hook
   const {
@@ -43,13 +48,26 @@ const Register = () => {
     console.log(data);
     createUser(data.email, data.password)
       .then((result) => {
-        // console.log(result.user);
+        // console.log(result);
         updateUserProfile(data.name, data.photo)
           .then(() => {
-            toast.success("Updated success");
-            reset();
-            logOut();
-            navigate("/login");
+            toast.success("Registration and profile Updated success");
+            // save user information inside database
+            const saveUser = { name: data.name, email: data.email };
+            fetch(`http://localhost:5000/students`, {
+              method: "POST",
+              headers: {
+                "content-type": "application/json",
+              },
+              body: JSON.stringify(saveUser),
+            })
+              .then((res) => res.json())
+              .then((data) => {
+                console.log(data);
+                reset();
+                logOut();
+                navigate("/login");
+              });
           })
           .catch((err) => {
             setLoading(false);
@@ -85,7 +103,21 @@ const Register = () => {
       .then((result) => {
         const user = result.user;
         console.log(user);
-        // navigate("/");
+        // saved user inside database
+        const saveUser = { name: user.displayName, email: user.email };
+        fetch(`http://localhost:5000/students`, {
+          method: "POST",
+          headers: {
+            "content-type": "application/json",
+          },
+          body: JSON.stringify(saveUser),
+        })
+          .then((res) => res.json())
+          .then((data) => {
+            console.log(data);
+
+            navigate(from, { replace: true });
+          });
       })
       .catch((error) => {
         setLoading(false);

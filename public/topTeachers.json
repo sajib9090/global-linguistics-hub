@@ -1,0 +1,38 @@
+[
+  {
+    "instructor_name": "John Smith",
+    "image": "https://images.unsplash.com/flagged/photo-1559475555-b26777ed3ab4?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=435&q=80",
+    "course_name": "Beginner Spanish",
+    "number_of_students": 25
+  },
+  {
+    "instructor_name": "Emily Johnson",
+    "image": "https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=387&q=80",
+    "course_name": "Intermediate French",
+    "number_of_students": 18
+  },
+  {
+    "instructor_name": "Michael Davis",
+    "image": "https://images.unsplash.com/photo-1544168190-79c17527004f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=388&q=80",
+    "course_name": "Advanced German",
+    "number_of_students": 12
+  },
+  {
+    "instructor_name": "Sophia Rodriguez",
+    "image": "https://images.unsplash.com/photo-1573497491765-dccce02b29df?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=387&q=80",
+    "course_name": "Business English",
+    "number_of_students": 15
+  },
+  {
+    "instructor_name": "David Wilson",
+    "image": "https://images.unsplash.com/photo-1608403689838-a9014243d151?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=387&q=80",
+    "course_name": "Intermediate Spanish",
+    "number_of_students": 20
+  },
+  {
+    "instructor_name": "Olivia Thompson",
+    "image": "https://images.unsplash.com/photo-1632678548683-b6c77b8e40bc?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=387&q=80",
+    "course_name": "Advanced French",
+    "number_of_students": 14
+  }
+]

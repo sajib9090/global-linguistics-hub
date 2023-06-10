@@ -1,4 +1,3 @@
-import React from "react";
 import { PacmanLoader } from "react-spinners";
 
 const Loader = () => {
@@ -12,7 +11,7 @@ const Loader = () => {
         items-center 
       "
     >
-      <PacmanLoader size={100} color="red" />
+      <PacmanLoader size={30} color="blue" />
     </div>
   );
 };

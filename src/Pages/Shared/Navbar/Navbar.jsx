@@ -26,6 +26,16 @@ const Navbar = () => {
       </li>
       <li>
         <NavLink
+          to="/secret"
+          className={({ isActive }) =>
+            isActive ? "text-[#007CFF]" : "text-black"
+          }
+        >
+          secret
+        </NavLink>
+      </li>
+      <li>
+        <NavLink
           to="/instructors"
           className={({ isActive }) =>
             isActive ? "text-[#007CFF]" : "text-black"
