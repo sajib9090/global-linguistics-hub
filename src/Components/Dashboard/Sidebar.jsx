@@ -7,7 +7,7 @@ const Sidebar = () => {
   const navigate = useNavigate();
 
   const [isAdmin, setIsAdmin] = useState(true);
-  const [isInstructor, setIsInstructor] = useState(false);
+  const [isInstructor, setIsInstructor] = useState(true);
   const [isStudent, setIsStudent] = useState(false);
 
   const handleLogOut = () => {

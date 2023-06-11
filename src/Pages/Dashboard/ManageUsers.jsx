@@ -1,13 +1,14 @@
 import { useQuery } from "@tanstack/react-query";
-import React from "react";
+
 import { Toaster, toast } from "react-hot-toast";
+import Swal from "sweetalert2";
 
 const ManageUsers = () => {
   const { data: students = [], refetch } = useQuery(["students"], async () => {
     const res = await fetch("http://localhost:5000/students");
     return res.json();
   });
-  console.log(students);
+  // console.log(students);
 
   const handleMakeAdmin = (student) => {
     fetch(`http://localhost:5000/students/admin/${student._id}`, {
@@ -35,6 +36,32 @@ const ManageUsers = () => {
         }
       });
   };
+
+  const handleUserDelete = (student) => {
+    Swal.fire({
+      title: "Are you sure?",
+      text: `You want to delete ${student.name}?`,
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, delete it!",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        fetch(`http://localhost:5000/students/${student._id}`, {
+          method: "DELETE",
+        })
+          .then((res) => res.json())
+          .then((data) => {
+            if (data.deletedCount > 0) {
+              refetch();
+              Swal.fire("Deleted!", `${student.name} is deleted`, "success");
+            }
+          });
+      }
+    });
+  };
+
   return (
     <div className="">
       <h1 className="font-bold text-2xl px-6 py-4">
@@ -155,7 +182,12 @@ const ManageUsers = () => {
                   )}
                 </td>
                 <th>
-                  <button className="btn btn-ghost btn-xs">Delete</button>
+                  <button
+                    onClick={() => handleUserDelete(student)}
+                    className="btn btn-ghost btn-xs bg-[red] text-white"
+                  >
+                    Delete
+                  </button>
                 </th>
               </tr>
             ))}
