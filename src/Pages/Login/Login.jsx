@@ -47,8 +47,9 @@ const Login = () => {
           name: user.displayName,
           email: user.email,
           photo: user.photoURL,
+          role: "user",
         };
-        fetch(`http://localhost:5000/students`, {
+        fetch(`${import.meta.env.VITE_API_URL}/students`, {
           method: "POST",
           headers: {
             "content-type": "application/json",

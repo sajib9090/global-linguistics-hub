@@ -57,8 +57,9 @@ const Register = () => {
               name: data.name,
               email: data.email,
               photo: data.photo,
+              role: "user",
             };
-            fetch(`http://localhost:5000/students`, {
+            fetch(`${import.meta.env.VITE_API_URL}/students`, {
               method: "POST",
               headers: {
                 "content-type": "application/json",
@@ -112,8 +113,9 @@ const Register = () => {
           name: user.displayName,
           email: user.email,
           photo: user.photoURL,
+          role: "user",
         };
-        fetch(`http://localhost:5000/students`, {
+        fetch(`${import.meta.env.VITE_API_URL}/students`, {
           method: "POST",
           headers: {
             "content-type": "application/json",

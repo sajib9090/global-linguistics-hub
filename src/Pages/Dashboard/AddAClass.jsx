@@ -32,8 +32,8 @@ const AddAClass = () => {
       price,
       status: "pending",
     };
-    console.log(addClassInfo);
-    fetch(`http://localhost:5000/classes`, {
+    // console.log(addClassInfo);
+    fetch(`${import.meta.env.VITE_API_URL}/classes`, {
       method: "POST",
       headers: {
         "content-type": "application/json",

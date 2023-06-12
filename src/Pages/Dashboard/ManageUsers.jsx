@@ -5,13 +5,13 @@ import Swal from "sweetalert2";
 
 const ManageUsers = () => {
   const { data: students = [], refetch } = useQuery(["students"], async () => {
-    const res = await fetch("http://localhost:5000/students");
+    const res = await fetch(`${import.meta.env.VITE_API_URL}/students`);
     return res.json();
   });
   // console.log(students);
 
   const handleMakeAdmin = (student) => {
-    fetch(`http://localhost:5000/students/admin/${student._id}`, {
+    fetch(`${import.meta.env.VITE_API_URL}/students/admin/${student._id}`, {
       method: "PATCH",
     })
       .then((res) => res.json())
@@ -24,9 +24,12 @@ const ManageUsers = () => {
       });
   };
   const handleMakeInstructor = (student) => {
-    fetch(`http://localhost:5000/students/instructor/${student._id}`, {
-      method: "PATCH",
-    })
+    fetch(
+      `${import.meta.env.VITE_API_URL}/students/instructor/${student._id}`,
+      {
+        method: "PATCH",
+      }
+    )
       .then((res) => res.json())
       .then((data) => {
         if (data.modifiedCount > 0) {
@@ -48,7 +51,7 @@ const ManageUsers = () => {
       confirmButtonText: "Yes, delete it!",
     }).then((result) => {
       if (result.isConfirmed) {
-        fetch(`http://localhost:5000/students/${student._id}`, {
+        fetch(`${import.meta.env.VITE_API_URL}/students/${student._id}`, {
           method: "DELETE",
         })
           .then((res) => res.json())
@@ -120,61 +123,36 @@ const ManageUsers = () => {
                       <button
                         disabled
                         onClick={() => handleMakeAdmin(student)}
-                        className="btn btn-success"
+                        className="btn btn-sm btn-success"
                       >
                         Admin
                       </button>
-                      {/* <button
-                        onClick={() => handleMakeInstructor(student)}
-                        className="btn"
-                      >
-                        Instructor
-                      </button> */}
                     </>
                   ) : (
                     <>
                       <button
                         onClick={() => handleMakeAdmin(student)}
-                        className="btn btn-success"
+                        className="btn btn-sm btn-success"
                       >
                         Admin
                       </button>
-                      {/* <button
-                        onClick={() => handleMakeInstructor(student)}
-                        className="btn"
-                      >
-                        Instructor
-                      </button> */}
                     </>
                   )}
                   {student.role === "instructor" ? (
                     <>
-                      {/* <button
-                        disabled
-                        onClick={() => handleMakeAdmin(student)}
-                        className="btn"
-                      >
-                        Admin
-                      </button> */}
                       <button
                         disabled
                         onClick={() => handleMakeInstructor(student)}
-                        className="btn btn-info"
+                        className="btn btn-sm btn-info"
                       >
                         Instructor
                       </button>
                     </>
                   ) : (
                     <>
-                      {/* <button
-                        onClick={() => handleMakeAdmin(student)}
-                        className="btn"
-                      >
-                        Admin
-                      </button> */}
                       <button
                         onClick={() => handleMakeInstructor(student)}
-                        className="btn btn-info"
+                        className="btn btn-sm btn-info"
                       >
                         Instructor
                       </button>

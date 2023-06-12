@@ -1,17 +1,23 @@
 import { useQuery } from "@tanstack/react-query";
-
 import { Toaster, toast } from "react-hot-toast";
 import Swal from "sweetalert2";
 
 const ManageClasses = () => {
-  const { data: classes = [], refetch } = useQuery(["students"], async () => {
-    const res = await fetch("http://localhost:5000/classes");
+  const { data: classes = [], refetch } = useQuery(["classes"], async () => {
+    const res = await fetch(`${import.meta.env.VITE_API_URL}/classes`);
     return res.json();
   });
-  // console.log(classes);
 
+  const { data: pendingClasses = [], refetch: refetchPendingClasses } =
+    useQuery(["pending"], async () => {
+      const res = await fetch(
+        `${import.meta.env.VITE_API_URL}/classes/pending`
+      );
+      return res.json();
+    });
+  console.log(pendingClasses);
   const handleApproved = (course) => {
-    fetch(`http://localhost:5000/classes/approved/${course._id}`, {
+    fetch(`${import.meta.env.VITE_API_URL}/classes/approved/${course._id}`, {
       method: "PATCH",
     })
       .then((res) => res.json())
@@ -19,24 +25,48 @@ const ManageClasses = () => {
         if (data.modifiedCount > 0) {
           // alert(`${student.name}, is admin now`);
           refetch();
+          refetchPendingClasses();
           toast.success(`${course.className}, is approved now`);
         }
       });
   };
   //
   const handleDenied = (course) => {
-    fetch(`http://localhost:5000/classes/denied/${course._id}`, {
-      method: "PATCH",
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        if (data.modifiedCount > 0) {
-          // alert(`${student.name}, is admin now`);
-          refetch();
-          toast.success(`${course.className}, is denied`);
-        }
-      });
-    // console.log(course);
+    Swal.fire({
+      title: "Are you sure?",
+      html: `
+        <input type="text" id="reasonInput" class="swal2-input" placeholder="Reason">
+      `,
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, deny it!",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        const reason = document.getElementById("reasonInput").value;
+
+        fetch(`${import.meta.env.VITE_API_URL}/classes/denied/${course._id}`, {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ reason }),
+        })
+          .then((res) => res.json())
+          .then((data) => {
+            if (data.modifiedCount > 0) {
+              refetch();
+              refetchPendingClasses();
+              Swal.fire(
+                "Denied!",
+                `${course.className} is denied with reason: ${reason}`,
+                "success"
+              );
+            }
+          });
+      }
+    });
   };
 
   ///
@@ -52,13 +82,14 @@ const ManageClasses = () => {
       confirmButtonText: "Yes, delete it!",
     }).then((result) => {
       if (result.isConfirmed) {
-        fetch(`http://localhost:5000/classes/${course._id}`, {
+        fetch(`${import.meta.env.VITE_API_URL}/classes/${course._id}`, {
           method: "DELETE",
         })
           .then((res) => res.json())
           .then((data) => {
             if (data.deletedCount > 0) {
               refetch();
+              refetchPendingClasses();
               Swal.fire(
                 "Deleted!",
                 `${course.className} is deleted`,
@@ -73,9 +104,14 @@ const ManageClasses = () => {
   return (
     <div>
       <div className="">
-        <h1 className="font-bold text-2xl px-6 py-4">
-          Total Pending Classes: {classes?.length}
-        </h1>
+        <div className="flex items-center justify-between bg-[black] bg-opacity-80 text-white ">
+          <h1 className="font-bold text-2xl px-6 py-4">
+            Pending Classes: {pendingClasses.length}
+          </h1>
+          <h1 className="font-bold text-2xl px-6 py-4">
+            All Post: {classes.length}
+          </h1>
+        </div>
         <div className="overflow-x-auto"></div>
         <table className="table">
           {/* head */}
@@ -114,8 +150,8 @@ const ManageClasses = () => {
                     </div>
                     <div>
                       <div className="font-bold">
-                        {course.className.length > 20
-                          ? course.className.slice(0, 20) + "..."
+                        {course?.className?.length > 20
+                          ? course.className.slice(0, 20)
                           : course.className}
                       </div>
                     </div>

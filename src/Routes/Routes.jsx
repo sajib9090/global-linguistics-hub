@@ -13,6 +13,7 @@ import AddAClass from "../Pages/Dashboard/AddAClass";
 import MyClasses from "../Pages/Dashboard/MyClasses";
 import ManageClasses from "../Pages/Dashboard/ManageClasses";
 import ManageUsers from "../Pages/Dashboard/ManageUsers";
+import Classes from "../Pages/Home/Classes";
 
 export const router = createBrowserRouter([
   {
@@ -35,6 +36,11 @@ export const router = createBrowserRouter([
             <Secret />
           </PrivateRoute>
         ),
+      },
+      {
+        path: "/classes",
+        element: <Classes />,
+        loader: () => fetch(`${import.meta.env.VITE_API_URL}/classes/approved`),
       },
       {
         path: "/register",
@@ -66,6 +72,14 @@ export const router = createBrowserRouter([
         path: "/dashboard/myClasses",
         element: <MyClasses />,
       },
+      // {
+      //   path: "/dashboard/myClasses/:instructorEmail/:id",
+      //   element: <EditedClass />,
+      //   loader: ({ params }) =>
+      //     fetch(
+      //       `http://localhost:5000/classes/myClasses/${params.instructorEmail}/${params.id}`
+      //     ),
+      // },
       {
         path: "/dashboard/manageUsers",
         element: <ManageUsers />,

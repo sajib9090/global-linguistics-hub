@@ -1,5 +1,6 @@
 import React, { createContext, useEffect, useState } from "react";
 import app from "../Firebase/firebase.config";
+import axios from "axios";
 import {
   GoogleAuthProvider,
   createUserWithEmailAndPassword,
@@ -48,6 +49,7 @@ const AuthProvider = ({ children }) => {
 
   const logOut = () => {
     setLoading(true);
+    localStorage.removeItem("access-token");
     return signOut(auth);
   };
 
@@ -57,7 +59,37 @@ const AuthProvider = ({ children }) => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
       setUser(currentUser);
       // console.log(currentUser);
-      setLoading(false);
+      if (currentUser?.email) {
+        //---------------------
+        // normal fetch system
+        //---------------------
+        // fetch(`http://localhost:5000/jwt`, {
+        //   method: "POST",
+        //   headers: {
+        //     "content-type": "application/json",
+        //   },
+        //   body: JSON.stringify({ email: currentUser.email }),
+        // })
+        //   .then((res) => res.json())
+        //   .then((data) => {
+        //     localStorage.setItem("access-token", data.token);
+        //     console.log(data);
+        //   });
+        //---------------------
+        // normal fetch system
+        //---------------------
+        axios
+          .post(`${import.meta.env.VITE_API_URL}/jwt`, {
+            email: currentUser?.email,
+          })
+          .then((data) => {
+            localStorage.setItem("access-token", data.data.token);
+            setLoading(false);
+          });
+      } else {
+        localStorage.removeItem("access-token");
+        setLoading(false);
+      }
     });
     return () => {
       return unsubscribe();
