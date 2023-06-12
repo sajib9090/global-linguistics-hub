@@ -29,15 +29,13 @@ const MyClasses = () => {
     queryKey: ["classes", user?.email],
     enabled: !loading,
     queryFn: async () => {
-      const res = await axiosSecure.get(
-        `${import.meta.env.VITE_API_URL}/classes/${user?.email}`
-      );
+      const res = await axiosSecure.get(`/classes/${user?.email}`);
       console.log("res from axios", res.data);
       return res.data;
     },
   });
 
-  console.log(myClasses);
+  // console.log(myClasses);
   return (
     <>
       {myClasses && Array.isArray(myClasses) && myClasses.length > 0 ? (
@@ -151,7 +149,7 @@ const MyClasses = () => {
         </div>
       ) : (
         <div className="h-screen flex justify-center items-center">
-          <h1 className="text-center text-5xl">No data found</h1>
+          <h1 className="text-center text-5xl">No classes found</h1>
         </div>
       )}
     </>

@@ -1,14 +1,19 @@
 import { Link, NavLink, Outlet, useNavigate } from "react-router-dom";
 import useAuth from "../../Hooks/UseAuth";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import useAdmin from "../../Hooks/useAdmin";
+import useInstructor from "../../Hooks/useInstructor";
 
 const Sidebar = () => {
   const { user, logOut } = useAuth();
   const navigate = useNavigate();
 
-  const [isAdmin, setIsAdmin] = useState(true);
-  const [isInstructor, setIsInstructor] = useState(true);
-  const [isStudent, setIsStudent] = useState(true);
+  // const [isAdmin, setIsAdmin] = useState(true);
+  const [isAdmin] = useAdmin();
+
+  // const [isInstructor, setIsInstructor] = useState(false);
+  const [isInstructor] = useInstructor();
+  const [isStudent, setIsStudent] = useState();
 
   const handleLogOut = () => {
     logOut();
