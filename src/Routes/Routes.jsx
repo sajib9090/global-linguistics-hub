@@ -5,7 +5,6 @@ import Home from "../Pages/Home/Home";
 import Login from "../Pages/Login/Login";
 import Register from "../Pages/Register/Register";
 import PrivateRoute from "./PrivateRoute";
-import Secret from "../Pages/Home/Secret";
 import DashboardLayout from "../Layout/DashboardLayout";
 import MySelectedClass from "../Pages/Dashboard/MySelectedClass";
 import MyEnrolledClasses from "../Pages/Dashboard/MyEnrolledClasses";
@@ -14,6 +13,10 @@ import MyClasses from "../Pages/Dashboard/MyClasses";
 import ManageClasses from "../Pages/Dashboard/ManageClasses";
 import ManageUsers from "../Pages/Dashboard/ManageUsers";
 import Classes from "../Pages/Home/Classes";
+import AdminRoute from "./AdminRoute";
+
+import Payment from "../Pages/Dashboard/Payment";
+import Instructors from "../Pages/Home/Instructors";
 
 export const router = createBrowserRouter([
   {
@@ -26,16 +29,12 @@ export const router = createBrowserRouter([
         element: <Home />,
       },
       {
-        path: "/login",
-        element: <Login />,
+        path: "/instructors",
+        element: <Instructors />,
       },
       {
-        path: "/secret",
-        element: (
-          <PrivateRoute>
-            <Secret />
-          </PrivateRoute>
-        ),
+        path: "/login",
+        element: <Login />,
       },
       {
         path: "/classes",
@@ -58,11 +57,27 @@ export const router = createBrowserRouter([
     children: [
       {
         path: "/dashboard/mySelectedClass",
-        element: <MySelectedClass />,
+        element: (
+          <PrivateRoute>
+            <MySelectedClass />
+          </PrivateRoute>
+        ),
       },
       {
         path: "/dashboard/myEnrollmentClasses",
-        element: <MyEnrolledClasses />,
+        element: (
+          <PrivateRoute>
+            <MyEnrolledClasses />
+          </PrivateRoute>
+        ),
+      },
+      {
+        path: "/dashboard/payment",
+        element: (
+          <PrivateRoute>
+            <Payment />
+          </PrivateRoute>
+        ),
       },
       {
         path: "/dashboard/addAClass",
@@ -82,11 +97,23 @@ export const router = createBrowserRouter([
       // },
       {
         path: "/dashboard/manageUsers",
-        element: <ManageUsers />,
+        element: (
+          <PrivateRoute>
+            <AdminRoute>
+              <ManageUsers />
+            </AdminRoute>
+          </PrivateRoute>
+        ),
       },
       {
         path: "/dashboard/manageClasses",
-        element: <ManageClasses />,
+        element: (
+          <PrivateRoute>
+            <AdminRoute>
+              <ManageClasses />
+            </AdminRoute>
+          </PrivateRoute>
+        ),
       },
     ],
   },

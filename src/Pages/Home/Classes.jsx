@@ -1,11 +1,88 @@
-import { useLoaderData } from "react-router-dom";
+import { useLoaderData, useNavigate } from "react-router-dom";
+import useAdmin from "../../Hooks/useAdmin";
+import useInstructor from "../../Hooks/useInstructor";
+import useCart from "../../Hooks/useCart";
+import useAuth from "../../Hooks/UseAuth";
+import Swal from "sweetalert2";
+import useAxiosSecure from "../../Hooks/useAxiosSecure";
+import { useQuery } from "@tanstack/react-query";
 
 const Classes = () => {
   const approvedClasses = useLoaderData();
+  const { user, loading } = useAuth();
+  const navigate = useNavigate();
+  const [cart, refetch] = useCart();
+
+  const [axiosSecure] = useAxiosSecure();
+  const { data: pendingCart = [], refetch: pendingRefetch } = useQuery({
+    queryKey: ["/carts/payment-pending", user?.email],
+    enabled: !loading,
+    queryFn: async () => {
+      const res = await axiosSecure.get(`/carts/payment-pending`, {
+        params: {
+          email: user?.email,
+        },
+      });
+      console.log("res from axios", res.data);
+      return res.data;
+    },
+  });
 
   const handleBuy = (approvedClass) => {
-    console.log(approvedClass._id);
+    if (user && user.email) {
+      const cartItem = {
+        classId: approvedClass._id,
+        name: approvedClass.className,
+        image: approvedClass.classImage,
+        price: approvedClass.price,
+        email: user.email,
+        info: "payment pending",
+      };
+      fetch(`${import.meta.env.VITE_API_URL}/carts`, {
+        method: "POST",
+        headers: {
+          "content-type": "application/json",
+        },
+        body: JSON.stringify(cartItem),
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          if (data.insertedId) {
+            pendingRefetch();
+            refetch();
+
+            Swal.fire({
+              position: "top-center",
+              icon: "success",
+              title: "Class added successfully to my selected classes",
+              showConfirmButton: false,
+              timer: 1500,
+            });
+          }
+        });
+    } else {
+      Swal.fire({
+        title: "Please Login First",
+        text: "You won't added cart without login/signUp",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Login",
+      }).then((result) => {
+        if (result.isConfirmed) {
+          navigate("/login");
+        }
+      });
+    }
   };
+  // console.log(approvedClasses);
+  const isEnrolled = (classId) =>
+    cart.some(
+      (item) => item.classId === classId && item.info === "payment pending"
+    );
+  const [isAdmin] = useAdmin();
+  const [isInstructor] = useInstructor();
 
   return (
     <div>
@@ -44,12 +121,23 @@ const Classes = () => {
                   </p>
                 </div>
                 <div className="mt-auto">
-                  <button
-                    onClick={() => handleBuy(approvedClass)}
-                    className="btn bg-[#61BCF2] text-white hover:text-black"
-                  >
-                    Buy Now
-                  </button>
+                  {isAdmin || isInstructor ? (
+                    <button
+                      disabled
+                      onClick={() => handleBuy(approvedClass)}
+                      className="btn bg-[#61BCF2] text-white hover:text-black"
+                    >
+                      Buy now
+                    </button>
+                  ) : (
+                    <button
+                      disabled={isEnrolled(approvedClass._id)}
+                      onClick={() => handleBuy(approvedClass)}
+                      className="btn bg-[#61BCF2] text-white hover:text-black"
+                    >
+                      Buy Now
+                    </button>
+                  )}
                 </div>
               </div>
             </div>

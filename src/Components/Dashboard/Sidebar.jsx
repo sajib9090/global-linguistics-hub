@@ -13,7 +13,6 @@ const Sidebar = () => {
 
   // const [isInstructor, setIsInstructor] = useState(false);
   const [isInstructor] = useInstructor();
-  const [isStudent, setIsStudent] = useState();
 
   const handleLogOut = () => {
     logOut();
@@ -45,7 +44,7 @@ const Sidebar = () => {
               />
               <h3 className="text-black font-bold">{user.displayName}</h3>
             </div>
-            {isStudent ? (
+            {!isAdmin && !isInstructor ? (
               <>
                 <li>
                   <NavLink

@@ -3,15 +3,41 @@ import { Link, NavLink } from "react-router-dom";
 import { RxAvatar } from "react-icons/rx";
 import useAuth from "../../../Hooks/UseAuth";
 import { Toaster, toast } from "react-hot-toast";
+import useCart from "../../../Hooks/useCart";
+import useAdmin from "../../../Hooks/useAdmin";
+import useInstructor from "../../../Hooks/useInstructor";
+import useAxiosSecure from "../../../Hooks/useAxiosSecure";
+import { useQuery } from "@tanstack/react-query";
 
 const Navbar = () => {
-  const { logOut, user } = useAuth();
+  const { logOut, user, loading } = useAuth();
+  // const [cart] = useCart();
+
+  const [isAdmin] = useAdmin();
+  const [isInstructor] = useInstructor();
+
   const handleLogOut = () => {
     logOut();
     toast.success("Logout Success.");
   };
 
   // console.log(user);
+  const [axiosSecure] = useAxiosSecure();
+  const { data: cart = [] } = useQuery({
+    queryKey: ["/carts/payment-pending", user?.email],
+    enabled: !loading,
+    queryFn: async () => {
+      const res = await axiosSecure.get(`/carts/payment-pending`, {
+        params: {
+          email: user?.email,
+        },
+      });
+      console.log("res from axios", res.data);
+      return res.data;
+    },
+  });
+
+  const subTotal = cart.reduce((sum, item) => item.price + sum, 0).toFixed(2);
   const navOptions = (
     <>
       <li>
@@ -22,16 +48,6 @@ const Navbar = () => {
           }
         >
           Home
-        </NavLink>
-      </li>
-      <li>
-        <NavLink
-          to="/secret"
-          className={({ isActive }) =>
-            isActive ? "text-[#007CFF]" : "text-black"
-          }
-        >
-          secret
         </NavLink>
       </li>
       <li>
@@ -112,7 +128,7 @@ const Navbar = () => {
         {/* <div className="navbar-end">
           <a className="btn">Button</a>
         </div> */}
-        {user && user ? (
+        {!isAdmin && !isInstructor ? (
           <div className="dropdown dropdown-end ml-auto">
             <label tabIndex={0} className="btn btn-ghost btn-circle">
               <div className="indicator">
@@ -130,7 +146,9 @@ const Navbar = () => {
                     d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"
                   />
                 </svg>
-                <span className="badge badge-sm indicator-item">8</span>
+                <span className="badge badge-sm indicator-item">
+                  {cart.length}
+                </span>
               </div>
             </label>
             <div
@@ -138,12 +156,14 @@ const Navbar = () => {
               className="mt-3 card card-compact dropdown-content w-52 bg-base-100 shadow"
             >
               <div className="card-body">
-                <span className="font-bold text-lg">8 Items</span>
-                <span className="text-info">Subtotal: $999</span>
+                <span className="font-bold text-lg">{cart.length} Items</span>
+                <span className="text-info">Subtotal: ${subTotal}</span>
                 <div className="card-actions">
-                  <button className="btn btn-primary btn-block">
-                    View cart
-                  </button>
+                  <Link to="/dashboard/mySelectedClass">
+                    <button className="btn btn-primary bg-[#007CFF] border-none btn-block">
+                      View cart
+                    </button>
+                  </Link>
                 </div>
               </div>
             </div>

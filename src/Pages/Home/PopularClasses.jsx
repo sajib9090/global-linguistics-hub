@@ -4,14 +4,13 @@ import PopularClassesCard from "./PopularClassesCard";
 const PopularClasses = () => {
   const [popularClasses, setPopularClasses] = useState([]);
   useEffect(() => {
-    fetch(`popularClasses.json`)
+    fetch(`${import.meta.env.VITE_API_URL}/classes/approved/sorted`)
       .then((res) => res.json())
       .then((data) => {
         setPopularClasses(data);
       });
   }, []);
-
-  //   console.log(popularClasses);
+  console.log(popularClasses);
   return (
     <div className="mt-[150px]">
       <div className="text-center">
@@ -23,9 +22,10 @@ const PopularClasses = () => {
         </p>
       </div>
       <div className="grid md:grid-cols-3 gap-10 mt-10">
-        {popularClasses.map((pc, index) => (
-          <PopularClassesCard key={index} pc={pc} />
-        ))}
+        {popularClasses &&
+          popularClasses
+            .slice(0, 6)
+            .map((pc) => <PopularClassesCard key={pc._id} pc={pc} />)}
       </div>
     </div>
   );

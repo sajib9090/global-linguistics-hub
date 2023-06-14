@@ -137,14 +137,7 @@ const Login = () => {
               type="submit"
               value="Login"
             >
-              {loading ? (
-                <AiOutlineLoading3Quarters
-                  className="m-auto animate-spin"
-                  size={24}
-                />
-              ) : (
-                "Login"
-              )}
+              Login
             </button>
           </div>
           <div className="divider py-4">Or</div>

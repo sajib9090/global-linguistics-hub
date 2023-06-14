@@ -1,10 +1,9 @@
-import React, { useEffect, useState } from "react";
-import PopularTeacherCard from "./PopularTeacherCard";
-import useAuth from "../../Hooks/UseAuth";
 import useAxiosSecure from "../../Hooks/useAxiosSecure";
 import { useQuery } from "@tanstack/react-query";
+import useAuth from "../../Hooks/UseAuth";
+import InstructorCard from "./InstructorCard";
 
-const PopularInstructors = () => {
+const Instructors = () => {
   const { loading } = useAuth();
   const [axiosSecure] = useAxiosSecure();
   const { data: allStudents = [], refetch } = useQuery({
@@ -25,19 +24,17 @@ const PopularInstructors = () => {
     <div className="mt-[150px]">
       <div className="text-center">
         <h1 className="text-[40px] font-bold mb-4 tracking-[10px]">
-          Popular Instructors
+          All Instructors
         </h1>
-        <p className="text-base font-extralight ">
-          Based on students enrollment
-        </p>
+        <p className="text-base font-extralight ">We have lovely instructors</p>
       </div>
-      <div className="grid md:grid-cols-3 gap-10 mt-[100px]">
-        {instructors?.slice(0, 6).map((teacher) => (
-          <PopularTeacherCard key={teacher._id} teacher={teacher} />
+      <div className="grid md:grid-cols-3 gap-10 mt-10">
+        {instructors?.map((instructor) => (
+          <InstructorCard key={instructor._id} instructor={instructor} />
         ))}
       </div>
     </div>
   );
 };
 
-export default PopularInstructors;
+export default Instructors;

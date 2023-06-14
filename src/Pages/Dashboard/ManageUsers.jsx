@@ -74,7 +74,7 @@ const ManageUsers = () => {
       }
     });
   };
-  // myClasses && Array.isArray(myClasses) && myClasses.length > 0 ?
+
   return (
     <>
       {students && Array.isArray(students) && students.length > 0 ? (
