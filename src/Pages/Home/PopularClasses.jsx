@@ -10,7 +10,7 @@ const PopularClasses = () => {
         setPopularClasses(data);
       });
   }, []);
-  console.log(popularClasses);
+  // console.log(popularClasses);
   return (
     <div className="mt-[150px]">
       <div className="text-center">

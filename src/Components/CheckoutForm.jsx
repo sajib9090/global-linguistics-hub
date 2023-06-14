@@ -5,7 +5,7 @@ import useAuth from "../Hooks/UseAuth";
 import useAxiosSecure from "../Hooks/useAxiosSecure";
 import { toast } from "react-hot-toast";
 
-const CheckoutForm = ({ price, cart }) => {
+const CheckoutForm = ({ price, carts }) => {
   const { user } = useAuth();
   const stripe = useStripe();
   const elements = useElements();
@@ -79,11 +79,11 @@ const CheckoutForm = ({ price, cart }) => {
         transactionId,
         price,
         date: new Date(),
-        quantity: cart.length,
-        cartItems: cart.map((item) => item._id),
-        classItems: cart.map((item) => item.classId),
+        quantity: carts.length,
+        cartItems: carts.map((item) => item._id),
+        classItems: carts.map((item) => item.classId),
         report: "service pending",
-        itemNames: cart.map((item) => item.name),
+        itemNames: carts.map((item) => item.name),
       };
       axiosSecure.post("/payments", payment).then((res) => {
         // console.log(res.data);

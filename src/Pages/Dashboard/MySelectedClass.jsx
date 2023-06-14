@@ -1,26 +1,26 @@
 import Swal from "sweetalert2";
-import useAuth from "../../Hooks/UseAuth";
-import useAxiosSecure from "../../Hooks/useAxiosSecure";
-import { useQuery } from "@tanstack/react-query";
 import { Link } from "react-router-dom";
+import { Helmet } from "react-helmet-async";
+import useCart from "../../Hooks/useCart";
 
 const MySelectedClass = () => {
-  const { user, loading } = useAuth();
-  const [axiosSecure] = useAxiosSecure();
-  const { refetch, data: cart = [] } = useQuery({
-    queryKey: ["/carts/payment-pending", user?.email],
-    enabled: !loading,
-    queryFn: async () => {
-      const res = await axiosSecure.get(`/carts/payment-pending`, {
-        params: {
-          email: user?.email,
-        },
-      });
-      console.log("res from axios", res.data);
-      return res.data;
-    },
-  });
-  const subTotal = cart.reduce((sum, item) => item.price + sum, 0).toFixed(2);
+  // const [axiosSecure] = useAxiosSecure();
+  // const { refetch, data: cart = [] } = useQuery({
+  //   queryKey: ["/carts/payment-pending", user?.email],
+  //   enabled: !loading,
+  //   queryFn: async () => {
+  //     const res = await axiosSecure.get(`/carts/payment-pending`, {
+  //       params: {
+  //         email: user?.email,
+  //       },
+  //     });
+  //     console.log("res from axios", res.data);
+  //     return res.data;
+  //   },
+  // });
+  const [cart, refetch] = useCart();
+  const carts = cart.filter((item) => item.info === "payment pending");
+  const subTotal = carts.reduce((sum, item) => item.price + sum, 0).toFixed(2);
   // console.log(cart);
   const handleDelete = (singleCart) => {
     Swal.fire({
@@ -48,12 +48,16 @@ const MySelectedClass = () => {
   };
   return (
     <>
-      {cart && Array.isArray(cart) && cart.length > 0 ? (
+      {carts && Array.isArray(carts) && carts.length > 0 ? (
         <div>
+          <Helmet>
+            <title>Global | My Selected Classes</title>
+          </Helmet>
           <div className="flex items-center justify-between bg-[black] bg-opacity-80 text-white ">
             <h1 className="font-bold text-2xl px-6 py-4 ">
-              My Selected Classes: {cart.length}
+              My Selected Classes: {carts.length}
             </h1>
+
             <Link to="/dashboard/payment">
               <h1 className="font-bold text-2xl px-6 py-4 bg-green-600 cursor-pointer">
                 Want to Pay? click here
@@ -82,7 +86,7 @@ const MySelectedClass = () => {
             </thead>
             <tbody className="bg-[#007cff] bg-opacity-10">
               {/* row 1 */}
-              {cart?.map((singleCart, index) => (
+              {carts?.map((singleCart, index) => (
                 <tr className="border-b-2 border-gray-500" key={singleCart._id}>
                   <th>
                     <label>

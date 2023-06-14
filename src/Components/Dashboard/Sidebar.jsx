@@ -1,18 +1,18 @@
 import { Link, NavLink, Outlet, useNavigate } from "react-router-dom";
 import useAuth from "../../Hooks/UseAuth";
-import { useEffect, useState } from "react";
-import useAdmin from "../../Hooks/useAdmin";
-import useInstructor from "../../Hooks/useInstructor";
+import UseAllUsers from "../../Hooks/UseAllUers";
+// import useAdmin from "../../Hooks/useAdmin";
+// import useInstructor from "../../Hooks/useInstructor";
 
 const Sidebar = () => {
   const { user, logOut } = useAuth();
   const navigate = useNavigate();
 
-  // const [isAdmin, setIsAdmin] = useState(true);
-  const [isAdmin] = useAdmin();
+  // const [isAdmin] = useAdmin();
 
-  // const [isInstructor, setIsInstructor] = useState(false);
-  const [isInstructor] = useInstructor();
+  // const [isInstructor] = useInstructor();
+  const [students] = UseAllUsers();
+  const currentUser = students?.find((users) => users?.email === user?.email);
 
   const handleLogOut = () => {
     logOut();
@@ -44,7 +44,7 @@ const Sidebar = () => {
               />
               <h3 className="text-black font-bold">{user.displayName}</h3>
             </div>
-            {!isAdmin && !isInstructor ? (
+            {currentUser?.role === "user" ? (
               <>
                 <li>
                   <NavLink
@@ -70,7 +70,7 @@ const Sidebar = () => {
             ) : (
               ""
             )}
-            {isInstructor ? (
+            {currentUser?.role === "instructor" ? (
               <>
                 <li>
                   <NavLink
@@ -96,7 +96,7 @@ const Sidebar = () => {
             ) : (
               ""
             )}
-            {isAdmin ? (
+            {currentUser?.role === "admin" ? (
               <>
                 <li>
                   <NavLink

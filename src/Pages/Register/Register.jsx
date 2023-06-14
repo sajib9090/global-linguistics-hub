@@ -11,6 +11,7 @@ import {
 import { useForm } from "react-hook-form";
 import useAuth from "../../Hooks/UseAuth";
 import { Toaster, toast } from "react-hot-toast";
+import { Helmet } from "react-helmet-async";
 
 // const navigate = useNavigate();
 
@@ -138,6 +139,9 @@ const Register = () => {
 
   return (
     <div className="grid md:grid-cols-2">
+      <Helmet>
+        <title>Global | Register</title>
+      </Helmet>
       <div className="">
         {" "}
         <Lottie

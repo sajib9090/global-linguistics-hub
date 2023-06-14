@@ -8,6 +8,7 @@ import { useForm } from "react-hook-form";
 import useAuth from "../../Hooks/UseAuth";
 import { Toaster, toast } from "react-hot-toast";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
+import { Helmet } from "react-helmet-async";
 
 const Login = () => {
   const [visible, setVisible] = useState(false);
@@ -73,13 +74,15 @@ const Login = () => {
 
   return (
     <div className="grid md:grid-cols-2">
+      <Helmet>
+        <title>Global | Login</title>
+      </Helmet>
       <div className="h-[90vh]">
-        {/* {" "}
         <Lottie
           className="w-[100%] h-[100%]"
           animationData={securityShield}
           loop={true}
-        ></Lottie> */}
+        ></Lottie>
       </div>
       <div className="flex flex-col justify-center bg-[#aacef5b3] bg-opacity-50 ">
         <div className="text-center mb-10">

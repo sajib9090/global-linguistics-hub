@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import useAuth from "../../Hooks/UseAuth";
 import { Toaster, toast } from "react-hot-toast";
+import { Helmet } from "react-helmet-async";
 
 const AddAClass = () => {
   const { user, loading } = useAuth();
@@ -49,6 +50,9 @@ const AddAClass = () => {
 
   return (
     <div>
+      <Helmet>
+        <title>Global | Add a class</title>
+      </Helmet>
       <div className="">
         <h1 className="font-bold text-5xl text-center pt-6">Add a class</h1>
       </div>

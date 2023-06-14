@@ -5,6 +5,7 @@ import { RiFileEditLine } from "react-icons/ri";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import useAxiosSecure from "../../Hooks/useAxiosSecure";
+import { Helmet } from "react-helmet-async";
 
 const MyClasses = () => {
   const [axiosSecure] = useAxiosSecure();
@@ -40,6 +41,9 @@ const MyClasses = () => {
     <>
       {myClasses && Array.isArray(myClasses) && myClasses.length > 0 ? (
         <div>
+          <Helmet>
+            <title>Global | My Classes</title>
+          </Helmet>
           <div className="">
             <div className="flex items-center justify-between bg-[black] bg-opacity-80 text-white ">
               <h1 className="font-bold text-2xl px-6 py-4">

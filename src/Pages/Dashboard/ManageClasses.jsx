@@ -2,6 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { Toaster, toast } from "react-hot-toast";
 import Swal from "sweetalert2";
 import useAxiosSecure from "../../Hooks/useAxiosSecure";
+import { Helmet } from "react-helmet-async";
 
 const ManageClasses = () => {
   const [axiosSecure] = useAxiosSecure();
@@ -115,6 +116,9 @@ const ManageClasses = () => {
     <>
       {classes && Array.isArray(classes) && classes.length > 0 ? (
         <div>
+          <Helmet>
+            <title>Global | Manage Classes</title>
+          </Helmet>
           <div className="">
             <div className="flex items-center justify-between bg-[black] bg-opacity-80 text-white ">
               <h1 className="font-bold text-2xl px-6 py-4">

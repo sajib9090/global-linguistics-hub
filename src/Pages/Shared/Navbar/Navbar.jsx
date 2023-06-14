@@ -1,20 +1,24 @@
-import React from "react";
 import { Link, NavLink } from "react-router-dom";
 import { RxAvatar } from "react-icons/rx";
 import useAuth from "../../../Hooks/UseAuth";
 import { Toaster, toast } from "react-hot-toast";
+// import useAdmin from "../../../Hooks/useAdmin";
+// import useInstructor from "../../../Hooks/useInstructor";
+// import useAxiosSecure from "../../../Hooks/useAxiosSecure";
+// import { useQuery } from "@tanstack/react-query";
+import UseAllUsers from "../../../Hooks/UseAllUers";
+// import axios from "axios";
 import useCart from "../../../Hooks/useCart";
-import useAdmin from "../../../Hooks/useAdmin";
-import useInstructor from "../../../Hooks/useInstructor";
-import useAxiosSecure from "../../../Hooks/useAxiosSecure";
-import { useQuery } from "@tanstack/react-query";
 
 const Navbar = () => {
   const { logOut, user, loading } = useAuth();
   // const [cart] = useCart();
+  const [students] = UseAllUsers();
+  const currentUser = students?.find((users) => users?.email === user?.email);
+  // console.log("hfdhdfjkhfh", currentUser);
 
-  const [isAdmin] = useAdmin();
-  const [isInstructor] = useInstructor();
+  // const [isAdmin] = useAdmin();
+  // const [isInstructor] = useInstructor();
 
   const handleLogOut = () => {
     logOut();
@@ -22,22 +26,25 @@ const Navbar = () => {
   };
 
   // console.log(user);
-  const [axiosSecure] = useAxiosSecure();
-  const { data: cart = [] } = useQuery({
-    queryKey: ["/carts/payment-pending", user?.email],
-    enabled: !loading,
-    queryFn: async () => {
-      const res = await axiosSecure.get(`/carts/payment-pending`, {
-        params: {
-          email: user?.email,
-        },
-      });
-      console.log("res from axios", res.data);
-      return res.data;
-    },
-  });
+  // const [axiosSecure] = useAxiosSecure();
+  // const { data: cart = [] } = useQuery({
+  //   queryKey: ["/carts/payment-pending", user?.email],
+  //   enabled: !loading,
+  //   queryFn: async () => {
+  //     const res = await axios(`/carts/payment-pending`, {
+  //       params: {
+  //         email: user?.email,
+  //       },
+  //     });
+  //     // console.log("res from axios", res.data);
+  //     return res.data;
+  //   },
+  // });
+  // console.log(cart);
+  const [cart] = useCart();
+  const carts = cart.filter((item) => item.info === "payment pending");
 
-  const subTotal = cart.reduce((sum, item) => item.price + sum, 0).toFixed(2);
+  const subTotal = carts.reduce((sum, item) => item.price + sum, 0).toFixed(2);
   const navOptions = (
     <>
       <li>
@@ -89,7 +96,7 @@ const Navbar = () => {
   return (
     <div className="mb-16">
       <div className="navbar bg-white text-black z-[999] fixed top-0 left-0">
-        <div className="navbar-start">
+        <div className="navbar-start w-[50%]">
           <div className="dropdown">
             <label tabIndex={0} className="btn btn-ghost lg:hidden">
               <svg
@@ -115,7 +122,7 @@ const Navbar = () => {
             </ul>
           </div>
           <Link to="/">
-            <a className="btn ml-auto md:ml-0 btn-ghost normal-case text-xl">
+            <a className="btn ml-auto md:ml-0 btn-ghost normal-case text-base md:text-xl">
               Global Linguistics Hub
             </a>
           </Link>
@@ -128,7 +135,7 @@ const Navbar = () => {
         {/* <div className="navbar-end">
           <a className="btn">Button</a>
         </div> */}
-        {!isAdmin && !isInstructor ? (
+        {currentUser?.role === "user" ? (
           <div className="dropdown dropdown-end ml-auto">
             <label tabIndex={0} className="btn btn-ghost btn-circle">
               <div className="indicator">
@@ -147,7 +154,7 @@ const Navbar = () => {
                   />
                 </svg>
                 <span className="badge badge-sm indicator-item">
-                  {cart.length}
+                  {carts.length}
                 </span>
               </div>
             </label>
@@ -156,7 +163,7 @@ const Navbar = () => {
               className="mt-3 card card-compact dropdown-content w-52 bg-base-100 shadow"
             >
               <div className="card-body">
-                <span className="font-bold text-lg">{cart.length} Items</span>
+                <span className="font-bold text-lg">{carts.length} Items</span>
                 <span className="text-info">Subtotal: ${subTotal}</span>
                 <div className="card-actions">
                   <Link to="/dashboard/mySelectedClass">
@@ -173,7 +180,7 @@ const Navbar = () => {
         )}
         <div>
           {user && user ? (
-            <div className="dropdown dropdown-end">
+            <div className="dropdown dropdown-end ml-auto">
               <label tabIndex={0} className="btn btn-ghost btn-circle avatar">
                 <div className="w-10 rounded-full">
                   <img referrerPolicy="no-referrer" src={user.photoURL} />

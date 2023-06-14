@@ -2,6 +2,7 @@ import useAxiosSecure from "../../Hooks/useAxiosSecure";
 import { useQuery } from "@tanstack/react-query";
 import useAuth from "../../Hooks/UseAuth";
 import InstructorCard from "./InstructorCard";
+import { Helmet } from "react-helmet-async";
 
 const Instructors = () => {
   const { loading } = useAuth();
@@ -22,6 +23,9 @@ const Instructors = () => {
   // console.log(instructors);
   return (
     <div className="mt-[150px]">
+      <Helmet>
+        <title>Global | Instructors</title>
+      </Helmet>
       <div className="text-center">
         <h1 className="text-[40px] font-bold mb-4 tracking-[10px]">
           All Instructors

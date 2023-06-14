@@ -1,32 +1,21 @@
-import { useQuery } from "@tanstack/react-query";
-import useAxiosSecure from "../../Hooks/useAxiosSecure";
-import useAuth from "../../Hooks/UseAuth";
+import { Helmet } from "react-helmet-async";
+import useCart from "../../Hooks/useCart";
 
 const MyEnrolledClasses = () => {
-  const { user, loading } = useAuth();
-  const [axiosSecure] = useAxiosSecure();
-  const { data: cart = [] } = useQuery({
-    queryKey: ["/carts/payment-done", user?.email],
-    enabled: !loading,
-    queryFn: async () => {
-      const res = await axiosSecure.get(`/carts/payment-done`, {
-        params: {
-          email: user?.email,
-        },
-      });
-      console.log("res from axios", res.data);
-      return res.data;
-    },
-  });
-  const subTotal = cart.reduce((sum, item) => item.price + sum, 0).toFixed(2);
+  const [cart] = useCart();
+  const carts = cart?.filter((item) => item.info === "payment done");
+  const subTotal = carts?.reduce((sum, item) => item.price + sum, 0).toFixed(2);
 
   return (
     <>
-      {cart && Array.isArray(cart) && cart.length > 0 ? (
+      {carts && Array.isArray(carts) && carts.length > 0 ? (
         <div>
+          <Helmet>
+            <title>Global | My Enrollment Classes</title>
+          </Helmet>
           <div className="flex items-center justify-between bg-[black] bg-opacity-80 text-white ">
             <h1 className="font-bold text-2xl px-6 py-4 ">
-              Total Purchases Class: {cart.length}
+              Total Purchases Class: {carts.length}
             </h1>
 
             <h1 className="font-bold text-2xl px-6 py-4">
@@ -52,7 +41,7 @@ const MyEnrolledClasses = () => {
             </thead>
             <tbody className="bg-[#007cff] bg-opacity-10">
               {/* row 1 */}
-              {cart?.map((singleCart, index) => (
+              {carts?.map((singleCart, index) => (
                 <tr className="border-b-2 border-gray-500" key={singleCart._id}>
                   <th>
                     <label>

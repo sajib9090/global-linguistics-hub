@@ -1,11 +1,11 @@
 import { useLoaderData, useNavigate } from "react-router-dom";
-import useAdmin from "../../Hooks/useAdmin";
-import useInstructor from "../../Hooks/useInstructor";
 import useCart from "../../Hooks/useCart";
 import useAuth from "../../Hooks/UseAuth";
 import Swal from "sweetalert2";
 import useAxiosSecure from "../../Hooks/useAxiosSecure";
 import { useQuery } from "@tanstack/react-query";
+import UseAllUsers from "../../Hooks/UseAllUers";
+import { Helmet } from "react-helmet-async";
 
 const Classes = () => {
   const approvedClasses = useLoaderData();
@@ -81,11 +81,16 @@ const Classes = () => {
     cart.some(
       (item) => item.classId === classId && item.info === "payment pending"
     );
-  const [isAdmin] = useAdmin();
-  const [isInstructor] = useInstructor();
+  // const [isAdmin] = useAdmin();
+  // const [isInstructor] = useInstructor();
+  const [students] = UseAllUsers();
+  const currentUser = students?.find((users) => users?.email === user?.email);
 
   return (
     <div>
+      <Helmet>
+        <title>Global | Classes</title>
+      </Helmet>
       <div>
         <h1 className="text-center font-bold text-3xl pt-8">All Classes</h1>
       </div>
@@ -121,7 +126,8 @@ const Classes = () => {
                   </p>
                 </div>
                 <div className="mt-auto">
-                  {isAdmin || isInstructor ? (
+                  {currentUser?.role === "admin" ||
+                  currentUser?.role === "instructor" ? (
                     <button
                       disabled
                       onClick={() => handleBuy(approvedClass)}

@@ -3,6 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import { Toaster, toast } from "react-hot-toast";
 import Swal from "sweetalert2";
 import useAxiosSecure from "../../Hooks/useAxiosSecure";
+import { Helmet } from "react-helmet-async";
 
 const ManageUsers = () => {
   const [axiosSecure] = useAxiosSecure();
@@ -79,6 +80,9 @@ const ManageUsers = () => {
     <>
       {students && Array.isArray(students) && students.length > 0 ? (
         <div className="">
+          <Helmet>
+            <title>Global | Manage Users</title>
+          </Helmet>
           <h1 className="font-bold text-2xl px-6 py-4">
             Total Users: {students?.length}
           </h1>
