@@ -17,6 +17,7 @@ import AdminRoute from "./AdminRoute";
 
 import Payment from "../Pages/Dashboard/Payment";
 import Instructors from "../Pages/Home/Instructors";
+import Payment2 from "../Pages/Dashboard/Payment2";
 
 export const router = createBrowserRouter([
   {
@@ -80,6 +81,14 @@ export const router = createBrowserRouter([
         ),
       },
       {
+        path: "/dashboard/payment2",
+        element: (
+          <PrivateRoute>
+            <Payment2 />
+          </PrivateRoute>
+        ),
+      },
+      {
         path: "/dashboard/addAClass",
         element: <AddAClass />,
       },
@@ -87,14 +96,6 @@ export const router = createBrowserRouter([
         path: "/dashboard/myClasses",
         element: <MyClasses />,
       },
-      // {
-      //   path: "/dashboard/myClasses/:instructorEmail/:id",
-      //   element: <EditedClass />,
-      //   loader: ({ params }) =>
-      //     fetch(
-      //       `http://localhost:5000/classes/myClasses/${params.instructorEmail}/${params.id}`
-      //     ),
-      // },
       {
         path: "/dashboard/manageUsers",
         element: (

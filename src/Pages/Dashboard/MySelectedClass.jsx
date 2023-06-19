@@ -1,25 +1,23 @@
 import Swal from "sweetalert2";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
 import useCart from "../../Hooks/useCart";
 
 const MySelectedClass = () => {
-  // const [axiosSecure] = useAxiosSecure();
-  // const { refetch, data: cart = [] } = useQuery({
-  //   queryKey: ["/carts/payment-pending", user?.email],
-  //   enabled: !loading,
-  //   queryFn: async () => {
-  //     const res = await axiosSecure.get(`/carts/payment-pending`, {
-  //       params: {
-  //         email: user?.email,
-  //       },
-  //     });
-  //     console.log("res from axios", res.data);
-  //     return res.data;
-  //   },
-  // });
+  const navigate = useNavigate();
+  // ...
+
+  const handlePay = (singleCart) => {
+    // Perform any necessary logic before navigating
+    // For example, you can pass the singleCart data to the payment route in the URL query params
+    const queryParams = new URLSearchParams();
+    queryParams.append("cart", JSON.stringify(singleCart));
+    navigate(`/dashboard/payment2?${queryParams.toString()}`);
+  };
   const [cart, refetch] = useCart();
   const carts = cart.filter((item) => item.info === "payment pending");
+  //
+  // const selectedCart = carts.find((cart) => cart._id === selectedId);
   const subTotal = carts.reduce((sum, item) => item.price + sum, 0).toFixed(2);
   // console.log(cart);
   const handleDelete = (singleCart) => {
@@ -82,6 +80,7 @@ const MySelectedClass = () => {
                 <th>Payment Info</th>
                 <th className="text-center">Price</th>
                 <th></th>
+                <th></th>
               </tr>
             </thead>
             <tbody className="bg-[#007cff] bg-opacity-10">
@@ -114,6 +113,14 @@ const MySelectedClass = () => {
                   </td>
                   <td>{singleCart.info}</td>
                   <td className="">${singleCart.price}</td>
+                  <th>
+                    <button
+                      onClick={() => handlePay(singleCart)}
+                      className="btn btn-ghost btn-xs bg-[green] text-white"
+                    >
+                      Pay
+                    </button>
+                  </th>
                   <th>
                     <button
                       onClick={() => handleDelete(singleCart)}
